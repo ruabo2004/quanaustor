@@ -396,4 +396,135 @@ class AdminController extends Controller
         return back()->with('success', 'Đánh giá đã được xóa.');
     }
 
+    // ================================
+    // COUPONS MANAGEMENT
+    // ================================
+
+    /**
+     * Display coupons list
+     */
+    public function coupons()
+    {
+        $coupons = Coupon::orderBy('created_at', 'desc')->paginate(15);
+        return view('admin.coupons.index', compact('coupons'));
+    }
+
+    /**
+     * Show create coupon form
+     */
+    public function createCoupon()
+    {
+        return view('admin.coupons.create');
+    }
+
+    /**
+     * Store new coupon
+     */
+    public function storeCoupon(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:20|unique:coupons',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'required|in:fixed,percentage',
+            'value' => 'required|numeric|min:0',
+            'minimum_amount' => 'nullable|numeric|min:0',
+            'maximum_discount' => 'nullable|numeric|min:0',
+            'usage_limit' => 'nullable|integer|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'is_active' => 'boolean'
+        ]);
+
+        // Additional validation for percentage type
+        if ($request->type === 'percentage' && $request->value > 100) {
+            return back()->withErrors(['value' => 'Phần trăm giảm giá không được vượt quá 100%'])->withInput();
+        }
+
+        Coupon::create([
+            'code' => strtoupper($request->code),
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+            'value' => $request->value,
+            'minimum_amount' => $request->minimum_amount,
+            'maximum_discount' => $request->maximum_discount,
+            'usage_limit' => $request->usage_limit,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->has('is_active')
+        ]);
+
+        return redirect()->route('admin.coupons')->with('success', 'Mã giảm giá đã được tạo thành công!');
+    }
+
+    /**
+     * Show edit coupon form
+     */
+    public function editCoupon(Coupon $coupon)
+    {
+        return view('admin.coupons.edit', compact('coupon'));
+    }
+
+    /**
+     * Update coupon
+     */
+    public function updateCoupon(Request $request, Coupon $coupon)
+    {
+        $request->validate([
+            'code' => 'required|string|max:20|unique:coupons,code,' . $coupon->id,
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'required|in:fixed,percentage',
+            'value' => 'required|numeric|min:0',
+            'minimum_amount' => 'nullable|numeric|min:0',
+            'maximum_discount' => 'nullable|numeric|min:0',
+            'usage_limit' => 'nullable|integer|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'is_active' => 'boolean'
+        ]);
+
+        // Additional validation for percentage type
+        if ($request->type === 'percentage' && $request->value > 100) {
+            return back()->withErrors(['value' => 'Phần trăm giảm giá không được vượt quá 100%'])->withInput();
+        }
+
+        $coupon->update([
+            'code' => strtoupper($request->code),
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+            'value' => $request->value,
+            'minimum_amount' => $request->minimum_amount,
+            'maximum_discount' => $request->maximum_discount,
+            'usage_limit' => $request->usage_limit,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->has('is_active')
+        ]);
+
+        return redirect()->route('admin.coupons')->with('success', 'Mã giảm giá đã được cập nhật thành công!');
+    }
+
+    /**
+     * Delete coupon
+     */
+    public function deleteCoupon(Coupon $coupon)
+    {
+        $coupon->delete();
+        return redirect()->route('admin.coupons')->with('success', 'Mã giảm giá đã được xóa thành công!');
+    }
+
+    /**
+     * Toggle coupon status
+     */
+    public function toggleCouponStatus(Coupon $coupon)
+    {
+        $coupon->update(['is_active' => !$coupon->is_active]);
+        
+        $status = $coupon->is_active ? 'kích hoạt' : 'vô hiệu hóa';
+        return back()->with('success', "Mã giảm giá đã được {$status}.");
+    }
+
 }

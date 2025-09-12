@@ -117,6 +117,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/reviews/{review}/reject', [App\Http\Controllers\AdminController::class, 'rejectReview'])->name('reviews.reject');
     Route::delete('/reviews/{review}', [App\Http\Controllers\AdminController::class, 'deleteReview'])->name('reviews.destroy');
     
+    // COUPONS MANAGEMENT
+    Route::get('/coupons', [App\Http\Controllers\AdminController::class, 'coupons'])->name('coupons');
+    Route::get('/coupons/create', [App\Http\Controllers\AdminController::class, 'createCoupon'])->name('coupons.create');
+    Route::post('/coupons', [App\Http\Controllers\AdminController::class, 'storeCoupon'])->name('coupons.store');
+    Route::get('/coupons/{coupon}/edit', [App\Http\Controllers\AdminController::class, 'editCoupon'])->name('coupons.edit');
+    Route::put('/coupons/{coupon}', [App\Http\Controllers\AdminController::class, 'updateCoupon'])->name('coupons.update');
+    Route::delete('/coupons/{coupon}', [App\Http\Controllers\AdminController::class, 'deleteCoupon'])->name('coupons.destroy');
+    Route::post('/coupons/{coupon}/toggle-status', [App\Http\Controllers\AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
+    
 });
 
 // REVIEW ROUTES (for customers)
