@@ -1,0 +1,162 @@
+/* ====================================
+   COMPACT NAVBAR STYLES
+   ==================================== */
+
+/* Override navbar size */
+.puma-navbar {
+    padding: 6px 0 !important;
+    min-height: 60px !important;
+}
+
+.puma-navbar .container {
+    padding: 0 15px;
+}
+
+/* Compact brand */
+.puma-navbar .navbar-brand {
+    font-size: 1.3rem !important;
+    padding: 3px 0 !important;
+    margin-right: 20px;
+}
+
+.puma-navbar .navbar-brand .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.puma-navbar .navbar-brand .brand-logo i {
+    font-size: 1.2rem;
+}
+
+.puma-navbar .navbar-brand .brand-text {
+    font-size: 1.3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Compact nav links */
+.puma-navbar .nav-link {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    margin: 0 2px !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+/* Compact dropdown */
+.puma-navbar .dropdown-menu {
+    margin-top: 5px !important;
+    font-size: 12px;
+}
+
+.puma-navbar .dropdown-item {
+    padding: 8px 15px !important;
+    font-size: 12px !important;
+    font-weight: 600;
+}
+
+/* Compact user dropdown */
+.puma-navbar #navbarDropdown {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+}
+
+/* Compact cart badge */
+.puma-navbar .badge {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    top: -5px !important;
+    right: -8px !important;
+}
+
+/* Compact toggler */
+.puma-navbar .navbar-toggler {
+    padding: 4px 8px;
+    font-size: 1rem;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.puma-navbar .navbar-toggler-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 991px) {
+    .puma-navbar {
+        padding: 5px 0 !important;
+    }
+    
+    .puma-navbar .navbar-brand {
+        font-size: 1.1rem !important;
+    }
+    
+    .puma-navbar .navbar-brand .brand-text {
+        font-size: 1.1rem;
+    }
+    
+    .puma-navbar .nav-link {
+        font-size: 11px !important;
+        padding: 5px 10px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .puma-navbar .navbar-brand {
+        font-size: 1rem !important;
+    }
+    
+    .puma-navbar .navbar-brand .brand-text {
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .puma-navbar .navbar-brand .brand-logo i {
+        font-size: 1rem;
+    }
+}
+
+/* Hover effects remain but smaller */
+.puma-navbar .nav-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+}
+
+/* Admin panel button compact */
+.puma-navbar .dropdown-item[href*="admin"] {
+    padding: 8px 12px !important;
+    margin: 3px 8px !important;
+    font-size: 11px !important;
+}
+
+.puma-navbar .dropdown-header {
+    font-size: 11px !important;
+    padding: 8px 12px 5px !important;
+}
+
+.puma-navbar .dropdown-item-text {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

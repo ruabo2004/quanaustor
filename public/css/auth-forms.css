@@ -1,0 +1,473 @@
+/* ====================================
+   AUTH FORMS OVERRIDE
+   Đảm bảo forms authentication không bị ảnh hưởng bởi custom-sizing
+   ==================================== */
+
+/* Reset all custom-sizing overrides for auth forms */
+.puma-login-wrapper * {
+    /* Reset button sizing */
+    padding: unset !important;
+    font-size: unset !important;
+    max-width: unset !important;
+    width: unset !important;
+    margin-bottom: unset !important;
+}
+
+/* Apply proper form control styling */
+.puma-login-wrapper .puma-form-control {
+    width: 100% !important;
+    padding: 15px 20px !important;
+    border: 3px solid var(--puma-light-grey) !important;
+    border-radius: var(--puma-radius) !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    transition: var(--puma-transition) !important;
+    background: var(--puma-white) !important;
+    box-shadow: var(--puma-shadow-sm) !important;
+}
+
+.puma-login-wrapper .puma-form-control:focus {
+    outline: none !important;
+    border-color: var(--puma-red) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Apply proper button styling */
+.puma-login-wrapper .puma-btn {
+    font-family: var(--puma-font-primary) !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding: 10px 25px !important;
+    border-radius: var(--puma-radius) !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: var(--puma-transition) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    font-size: 13px !important;
+}
+
+.puma-login-wrapper .puma-btn-primary {
+    background: var(--puma-gradient-2) !important;
+    color: var(--puma-white) !important;
+    box-shadow: var(--puma-shadow-red) !important;
+}
+
+.puma-login-wrapper .puma-btn-primary:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: var(--puma-shadow-lg), var(--puma-shadow-red) !important;
+    color: var(--puma-white) !important;
+}
+
+/* Form labels */
+.puma-login-wrapper .puma-form-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    color: var(--puma-black) !important;
+    margin-bottom: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+/* Input wrapper and password toggle */
+.puma-login-wrapper .puma-input-wrapper {
+    position: relative !important;
+}
+
+.puma-login-wrapper .puma-password-toggle {
+    position: absolute !important;
+    right: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: none !important;
+    border: none !important;
+    color: var(--puma-medium-grey) !important;
+    cursor: pointer !important;
+    padding: 5px !important;
+    border-radius: 6px !important;
+    transition: var(--puma-transition) !important;
+    font-size: 16px !important;
+}
+
+.puma-login-wrapper .puma-password-toggle:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--puma-red) !important;
+}
+
+/* Error messages */
+.puma-login-wrapper .puma-error-message {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: var(--puma-red) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    margin-top: 8px !important;
+    padding: 8px 12px !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+    border-radius: var(--puma-radius) !important;
+    border-left: 4px solid var(--puma-red) !important;
+    text-transform: uppercase !important;
+}
+
+/* Form groups */
+.puma-login-wrapper .puma-form-group {
+    margin-bottom: 25px !important;
+}
+
+/* Card and layout */
+.puma-login-wrapper .puma-login-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: var(--puma-radius-lg) !important;
+    box-shadow: var(--puma-shadow-lg) !important;
+    border: 3px solid transparent !important;
+    overflow: hidden !important;
+    position: relative !important;
+    z-index: 10 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Header styling */
+.puma-login-wrapper .puma-login-header {
+    background: var(--puma-gradient-1) !important;
+    padding: 40px 30px !important;
+    text-align: center !important;
+    color: var(--puma-white) !important;
+    position: relative !important;
+}
+
+.puma-login-wrapper .puma-login-logo {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 0, 0, 0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 20px !important;
+    font-size: 2.5rem !important;
+    backdrop-filter: blur(10px) !important;
+    border: 3px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.puma-login-wrapper .puma-login-title {
+    font-size: 2.5rem !important;
+    font-weight: 900 !important;
+    margin: 0 0 10px 0 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    letter-spacing: 3px !important;
+}
+
+.puma-login-wrapper .puma-login-subtitle {
+    font-size: 1rem !important;
+    opacity: 0.9 !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.puma-login-wrapper .puma-login-body {
+    padding: 40px 30px !important;
+}
+
+/* Register/Login links */
+.puma-login-wrapper .puma-register-link {
+    text-align: center !important;
+    margin-top: 25px !important;
+    padding-top: 25px !important;
+    border-top: 3px solid var(--puma-light-grey) !important;
+}
+
+.puma-login-wrapper .puma-register-link p {
+    margin: 0 !important;
+    color: var(--puma-medium-grey) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.puma-login-wrapper .puma-register-link a {
+    color: var(--puma-red) !important;
+    text-decoration: none !important;
+    font-weight: 900 !important;
+    transition: var(--puma-transition) !important;
+}
+
+.puma-login-wrapper .puma-register-link a:hover {
+    color: var(--puma-black) !important;
+    text-decoration: underline !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .puma-login-wrapper .puma-login-header {
+        padding: 30px 20px !important;
+    }
+    
+    .puma-login-wrapper .puma-login-body {
+        padding: 30px 20px !important;
+    }
+    
+    .puma-login-wrapper .puma-login-title {
+        font-size: 2rem !important;
+    }
+    
+    .puma-login-wrapper .puma-form-control {
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    .puma-login-wrapper .puma-btn {
+        padding: 8px 20px !important;
+        font-size: 12px !important;
+    }
+}
+
+   Đảm bảo forms authentication không bị ảnh hưởng bởi custom-sizing
+   ==================================== */
+
+/* Reset all custom-sizing overrides for auth forms */
+.puma-login-wrapper * {
+    /* Reset button sizing */
+    padding: unset !important;
+    font-size: unset !important;
+    max-width: unset !important;
+    width: unset !important;
+    margin-bottom: unset !important;
+}
+
+/* Apply proper form control styling */
+.puma-login-wrapper .puma-form-control {
+    width: 100% !important;
+    padding: 15px 20px !important;
+    border: 3px solid var(--puma-light-grey) !important;
+    border-radius: var(--puma-radius) !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    transition: var(--puma-transition) !important;
+    background: var(--puma-white) !important;
+    box-shadow: var(--puma-shadow-sm) !important;
+}
+
+.puma-login-wrapper .puma-form-control:focus {
+    outline: none !important;
+    border-color: var(--puma-red) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Apply proper button styling */
+.puma-login-wrapper .puma-btn {
+    font-family: var(--puma-font-primary) !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding: 10px 25px !important;
+    border-radius: var(--puma-radius) !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: var(--puma-transition) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    font-size: 13px !important;
+}
+
+.puma-login-wrapper .puma-btn-primary {
+    background: var(--puma-gradient-2) !important;
+    color: var(--puma-white) !important;
+    box-shadow: var(--puma-shadow-red) !important;
+}
+
+.puma-login-wrapper .puma-btn-primary:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: var(--puma-shadow-lg), var(--puma-shadow-red) !important;
+    color: var(--puma-white) !important;
+}
+
+/* Form labels */
+.puma-login-wrapper .puma-form-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    color: var(--puma-black) !important;
+    margin-bottom: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+/* Input wrapper and password toggle */
+.puma-login-wrapper .puma-input-wrapper {
+    position: relative !important;
+}
+
+.puma-login-wrapper .puma-password-toggle {
+    position: absolute !important;
+    right: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: none !important;
+    border: none !important;
+    color: var(--puma-medium-grey) !important;
+    cursor: pointer !important;
+    padding: 5px !important;
+    border-radius: 6px !important;
+    transition: var(--puma-transition) !important;
+    font-size: 16px !important;
+}
+
+.puma-login-wrapper .puma-password-toggle:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--puma-red) !important;
+}
+
+/* Error messages */
+.puma-login-wrapper .puma-error-message {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: var(--puma-red) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    margin-top: 8px !important;
+    padding: 8px 12px !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+    border-radius: var(--puma-radius) !important;
+    border-left: 4px solid var(--puma-red) !important;
+    text-transform: uppercase !important;
+}
+
+/* Form groups */
+.puma-login-wrapper .puma-form-group {
+    margin-bottom: 25px !important;
+}
+
+/* Card and layout */
+.puma-login-wrapper .puma-login-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: var(--puma-radius-lg) !important;
+    box-shadow: var(--puma-shadow-lg) !important;
+    border: 3px solid transparent !important;
+    overflow: hidden !important;
+    position: relative !important;
+    z-index: 10 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Header styling */
+.puma-login-wrapper .puma-login-header {
+    background: var(--puma-gradient-1) !important;
+    padding: 40px 30px !important;
+    text-align: center !important;
+    color: var(--puma-white) !important;
+    position: relative !important;
+}
+
+.puma-login-wrapper .puma-login-logo {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 0, 0, 0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 20px !important;
+    font-size: 2.5rem !important;
+    backdrop-filter: blur(10px) !important;
+    border: 3px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.puma-login-wrapper .puma-login-title {
+    font-size: 2.5rem !important;
+    font-weight: 900 !important;
+    margin: 0 0 10px 0 !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+    letter-spacing: 3px !important;
+}
+
+.puma-login-wrapper .puma-login-subtitle {
+    font-size: 1rem !important;
+    opacity: 0.9 !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.puma-login-wrapper .puma-login-body {
+    padding: 40px 30px !important;
+}
+
+/* Register/Login links */
+.puma-login-wrapper .puma-register-link {
+    text-align: center !important;
+    margin-top: 25px !important;
+    padding-top: 25px !important;
+    border-top: 3px solid var(--puma-light-grey) !important;
+}
+
+.puma-login-wrapper .puma-register-link p {
+    margin: 0 !important;
+    color: var(--puma-medium-grey) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.puma-login-wrapper .puma-register-link a {
+    color: var(--puma-red) !important;
+    text-decoration: none !important;
+    font-weight: 900 !important;
+    transition: var(--puma-transition) !important;
+}
+
+.puma-login-wrapper .puma-register-link a:hover {
+    color: var(--puma-black) !important;
+    text-decoration: underline !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .puma-login-wrapper .puma-login-header {
+        padding: 30px 20px !important;
+    }
+    
+    .puma-login-wrapper .puma-login-body {
+        padding: 30px 20px !important;
+    }
+    
+    .puma-login-wrapper .puma-login-title {
+        font-size: 2rem !important;
+    }
+    
+    .puma-login-wrapper .puma-form-control {
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    .puma-login-wrapper .puma-btn {
+        padding: 8px 20px !important;
+        font-size: 12px !important;
+    }
+}
