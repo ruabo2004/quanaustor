@@ -115,7 +115,30 @@ Route::post('/password/reset', [App\Http\Controllers\Auth\ResetPasswordControlle
 Route::get('/email/verify', [App\Http\Controllers\Auth\VerificationController::class, 'show'])->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/email/verification-notification', [App\Http\Controllers\Auth\VerificationController::class, 'resend'])->name('verification.send');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Home route - protected by auth middleware
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+
+// Debug route for login testing
+Route::post('/debug-login', function(\Illuminate\Http\Request $request) {
+    \Illuminate\Support\Facades\Log::info('Debug login attempt', [
+        'email' => $request->email,
+        'password' => $request->password ? '***' : 'empty',
+        'all_input' => $request->all(),
+        'session_id' => session()->getId(),
+        'url.intended' => session('url.intended')
+    ]);
+    
+    return response()->json([
+        'message' => 'Debug info logged',
+        'email' => $request->email,
+        'session_id' => session()->getId(),
+        'intended' => session('url.intended')
+    ]);
+});
+
 
 // =============================================
 // ADMIN ROUTES - FULL MANAGEMENT SYSTEM  
@@ -124,7 +147,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // DASHBOARD
     Route::get('/', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard.alt');
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard']);
     
     // USERS MANAGEMENT - Full CRUD
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');

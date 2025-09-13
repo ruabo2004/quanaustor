@@ -682,7 +682,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-tooltip="ĐĂNG XUẤT">
+                            <a href="#" class="nav-link" onclick="handleLogout(event)" data-tooltip="ĐĂNG XUẤT">
                                 <div class="nav-icon"><i class="fas fa-sign-out-alt"></i></div>
                                 <span class="nav-text">ĐĂNG XUẤT</span>
                             </a>
@@ -759,6 +759,22 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Logout function
+        function handleLogout(event) {
+            event.preventDefault();
+            console.log('Logout clicked');
+            
+            const form = document.getElementById('logout-form');
+            if (form) {
+                console.log('Submitting logout form');
+                form.submit();
+            } else {
+                console.error('Logout form not found');
+                // Fallback method
+                window.location.href = '{{ route('logout') }}';
+            }
+        }
+
         // Sidebar Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
             const sidebarToggle = document.getElementById('sidebarToggle');

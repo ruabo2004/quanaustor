@@ -204,7 +204,7 @@
                                     
                                     <hr style="margin: var(--space-2) 0; border: 1px solid var(--gray-200);">
                                     <a class="dropdown-item-modern" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                       onclick="handleMainLogout(event)">
                                         <i class="fas fa-sign-out-alt"></i>
                                         Đăng xuất
                                     </a>
@@ -266,6 +266,7 @@
                         <p style="font-size: 12px; margin-bottom: 3px;"><i class="fas fa-envelope me-1" style="font-size: 11px;"></i>hunre.store@gmail.com</p>
                         <p style="font-size: 12px; margin-bottom: 3px;"><i class="fas fa-clock me-1" style="font-size: 11px;"></i>8:00 - 17:00 (Thứ 2 - Thứ 6)</p>
                     </div>
+
                 </div>
                 <hr class="my-2" style="opacity: 0.3;">
                 <div class="row align-items-center">
@@ -289,6 +290,24 @@
     <script src="{{ asset('js/support.js') }}"></script>
     <script src="{{ asset('js/analytics.js') }}"></script>
     <script src="{{ asset('js/social-integration.js') }}"></script>
+    
+    <script>
+        // Main app logout function
+        function handleMainLogout(event) {
+            event.preventDefault();
+            console.log('Main logout clicked');
+            
+            const form = document.getElementById('logout-form');
+            if (form) {
+                console.log('Submitting main logout form');
+                form.submit();
+            } else {
+                console.error('Main logout form not found');
+                // Fallback to GET request (not recommended but better than nothing)
+                window.location.href = '/logout';
+            }
+        }
+    </script>
     
     <!-- Live Chat Widget -->
     <div class="chat-widget">
@@ -319,4 +338,5 @@
         </div>
     </div>
 </body>
+</html>
 </html>

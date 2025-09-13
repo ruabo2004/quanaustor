@@ -14,8 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // Không yêu cầu auth cho home page
-        // $this->middleware('auth');
+        // Yêu cầu auth cho home page (handled by route middleware)
     }
 
     /**
