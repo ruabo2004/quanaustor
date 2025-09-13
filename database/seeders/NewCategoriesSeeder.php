@@ -32,3 +32,4 @@ class NewCategoriesSeeder extends Seeder
 
 
 
+

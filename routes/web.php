@@ -15,6 +15,42 @@ Route::get('/', function () {
 });
 Route::resource('products', ProductController::class);
 Route::get('/products-bestsellers', [ProductController::class, 'bestSellers'])->name('products.bestsellers');
+
+// Advanced search and filter routes
+Route::get('/products/filter/ajax', [ProductController::class, 'index'])->name('products.filter.ajax');
+Route::get('/products/search/suggestions', [ProductController::class, 'searchSuggestions'])->name('products.search.suggestions');
+
+// Recommendation and personalization routes
+Route::post('/recommendations/track-view', [App\Http\Controllers\RecommendationController::class, 'trackView'])->name('recommendations.track-view');
+Route::post('/recommendations/update-duration', [App\Http\Controllers\RecommendationController::class, 'updateViewDuration'])->name('recommendations.update-duration');
+Route::get('/recommendations/get', [App\Http\Controllers\RecommendationController::class, 'getRecommendations'])->name('recommendations.get');
+Route::get('/recommendations/recently-viewed', [App\Http\Controllers\RecommendationController::class, 'getRecentlyViewed'])->name('recommendations.recently-viewed');
+
+// Public loyalty routes
+Route::get('/loyalty/tiers', [App\Http\Controllers\LoyaltyController::class, 'getTiers'])->name('loyalty.tiers');
+
+// Support & FAQ routes
+Route::get('/faq', [App\Http\Controllers\FAQController::class, 'index'])->name('faq.index');
+Route::get('/faq/{id}', [App\Http\Controllers\FAQController::class, 'show'])->name('faq.show');
+Route::get('/faq/search/ajax', [App\Http\Controllers\FAQController::class, 'search'])->name('faq.search');
+Route::get('/faq/search/suggestions', [App\Http\Controllers\FAQController::class, 'suggestions'])->name('faq.suggestions');
+Route::post('/faq/{id}/helpful', [App\Http\Controllers\FAQController::class, 'markHelpful'])->name('faq.helpful');
+Route::post('/faq/{id}/not-helpful', [App\Http\Controllers\FAQController::class, 'markNotHelpful'])->name('faq.not-helpful');
+Route::get('/faq/api/popular', [App\Http\Controllers\FAQController::class, 'popular'])->name('faq.popular');
+Route::get('/faq/api/categories', [App\Http\Controllers\FAQController::class, 'categories'])->name('faq.categories');
+
+// CMS Routes - Pages
+Route::get('/pages/{slug}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+
+// Blog Routes
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/category/{slug}', [App\Http\Controllers\BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/tag/{slug}', [App\Http\Controllers\BlogController::class, 'tag'])->name('blog.tag');
+Route::get('/blog/author/{id}', [App\Http\Controllers\BlogController::class, 'author'])->name('blog.author');
+Route::get('/blog/search', [App\Http\Controllers\BlogController::class, 'search'])->name('blog.search');
+Route::post('/blog/{slug}/like', [App\Http\Controllers\BlogController::class, 'like'])->name('blog.like');
+Route::post('/blog/{slug}/share', [App\Http\Controllers\BlogController::class, 'share'])->name('blog.share');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Cart routes for guests
@@ -39,6 +75,20 @@ Route::middleware(['auth', 'migrate.cart'])->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    
+    // Personalization routes for logged-in users
+    Route::get('/profile/browsing-stats', [App\Http\Controllers\RecommendationController::class, 'getBrowsingStats'])->name('profile.browsing-stats');
+    Route::get('/profile/preferences', [App\Http\Controllers\RecommendationController::class, 'getPreferenceProfile'])->name('profile.preferences');
+    
+    // Loyalty program routes
+    Route::get('/loyalty/dashboard', [App\Http\Controllers\LoyaltyController::class, 'dashboard'])->name('loyalty.dashboard');
+    Route::get('/loyalty/data', [App\Http\Controllers\LoyaltyController::class, 'getLoyaltyData'])->name('loyalty.data');
+    Route::get('/loyalty/transactions', [App\Http\Controllers\LoyaltyController::class, 'getTransactions'])->name('loyalty.transactions');
+    Route::get('/loyalty/tier-progress', [App\Http\Controllers\LoyaltyController::class, 'getTierProgress'])->name('loyalty.tier-progress');
+    Route::get('/loyalty/tier-benefits', [App\Http\Controllers\LoyaltyController::class, 'getTierBenefits'])->name('loyalty.tier-benefits');
+    Route::get('/loyalty/expiring-points', [App\Http\Controllers\LoyaltyController::class, 'getExpiringPoints'])->name('loyalty.expiring-points');
+    Route::post('/loyalty/claim-birthday', [App\Http\Controllers\LoyaltyController::class, 'claimBirthdayBonus'])->name('loyalty.claim-birthday');
+    Route::post('/loyalty/redeem-reward', [App\Http\Controllers\LoyaltyController::class, 'redeemReward'])->name('loyalty.redeem-reward');
 });
 // =============================================
 // AUTHENTICATION ROUTES (GET + POST)

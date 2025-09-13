@@ -47,6 +47,25 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Get user's browsing history
+     */
+    public function browsingHistory()
+    {
+        return $this->hasMany(BrowsingHistory::class);
+    }
+
+    /**
+     * Get user's preferences
+     */
+    public function preferences()
+    {
+        return $this->hasOne(UserPreference::class);
+    }
+
+    /**
+     * Get user's orders
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -86,5 +105,21 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get user's loyalty points account
+     */
+    public function loyaltyPoints()
+    {
+        return $this->hasOne(LoyaltyPoint::class);
+    }
+
+    /**
+     * Get user's point transactions
+     */
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class);
     }
 }

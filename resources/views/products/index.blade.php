@@ -1,500 +1,612 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Products Section with Search & Filter -->
-<section class="puma-products-section">
+<!-- Advanced Search & Filter Hero -->
+<section class="modern-hero" style="padding: var(--space-8) 0; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
     <div class="container">
-        <div class="puma-section-title">
-            <h2>TẤT CẢ SẢN PHẨM</h2>
-            <p>Bộ sưu tập quần âu chuyên nghiệp</p>
-        </div>
-
-        <!-- Search & Filter Section -->
-        <div class="search-filter-section mb-4">
-            <form method="GET" action="{{ route('products.index') }}" id="filterForm">
-                <div class="row">
-                    <!-- Search Box -->
-                    <div class="col-md-4 mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" 
-                                   placeholder="Tìm kiếm sản phẩm..." 
-                                   value="{{ request('search') }}">
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Category Filter -->
-                    <div class="col-md-2 mb-3">
-                        <select class="form-select" name="category_id" onchange="submitFilter()">
-                            <option value="all">Tất cả danh mục</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" 
-                                        {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Price Range -->
-                    <div class="col-md-2 mb-3">
-                        <input type="number" class="form-control" name="min_price" 
-                               placeholder="Giá từ" value="{{ request('min_price') }}"
-                               onchange="submitFilter()">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <input type="number" class="form-control" name="max_price" 
-                               placeholder="Đến" value="{{ request('max_price') }}"
-                               onchange="submitFilter()">
-                    </div>
-
-                    <!-- Sort -->
-                    <div class="col-md-2 mb-3">
-                        <select class="form-select" name="sort" onchange="submitFilter()">
-                            <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Tên A-Z</option>
-                            <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Giá thấp → cao</option>
-                            <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Giá cao → thấp</option>
-                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Advanced Filters (Collapsible) -->
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-outline-primary btn-sm mb-3" 
-                                data-bs-toggle="collapse" data-bs-target="#advancedFilters">
-                            <i class="fas fa-filter"></i> Bộ lọc nâng cao
-                        </button>
-                    </div>
-                </div>
-
-                <div class="collapse" id="advancedFilters">
-                    <div class="row mb-3">
-                        <!-- Style Filter -->
-                        <div class="col-md-3 mb-2">
-                            <label class="form-label">Kiểu dáng</label>
-                            <select class="form-select" name="style" onchange="submitFilter()">
-                                <option value="all">Tất cả</option>
-                                @foreach($styles as $style)
-                                    <option value="{{ $style }}" 
-                                            {{ request('style') == $style ? 'selected' : '' }}>
-                                        {{ $style }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Material Filter -->
-                        <div class="col-md-3 mb-2">
-                            <label class="form-label">Chất liệu</label>
-                            <select class="form-select" name="material" onchange="submitFilter()">
-                                <option value="all">Tất cả</option>
-                                @foreach($materials as $material)
-                                    <option value="{{ $material }}" 
-                                            {{ request('material') == $material ? 'selected' : '' }}>
-                                        {{ $material }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Fit Filter -->
-                        <div class="col-md-3 mb-2">
-                            <label class="form-label">Kiểu fit</label>
-                            <select class="form-select" name="fit" onchange="submitFilter()">
-                                <option value="all">Tất cả</option>
-                                @foreach($fits as $fit)
-                                    <option value="{{ $fit }}" 
-                                            {{ request('fit') == $fit ? 'selected' : '' }}>
-                                        {{ $fit }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Clear Filters -->
-                        <div class="col-md-3 mb-2">
-                            <label class="form-label">&nbsp;</label>
-                            <div>
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times"></i> Xóa bộ lọc
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Results Info -->
-        <div class="results-info mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <small class="text-muted">
-                        Hiển thị {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} 
-                        trong {{ $products->total() }} kết quả
-                        @if(request('search'))
-                            cho "<strong>{{ request('search') }}</strong>"
-                        @endif
-                    </small>
-                </div>
-                <div>
-                    <a href="{{ route('products.bestsellers') }}" class="btn btn-outline-warning btn-sm">
-                        <i class="fas fa-fire"></i> Sản phẩm bán chạy
-                    </a>
-                </div>
+        <div class="text-center">
+            <div class="animate-fadeInUp">
+                <h1 style="color: white; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: var(--font-black); margin-bottom: var(--space-3);">
+                    <i class="fas fa-search me-3"></i>Khám phá sản phẩm
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); font-size: 1.125rem; margin-bottom: 0;">
+                    Tìm kiếm thông minh với bộ lọc nâng cao - {{ $filterCounts['total'] }} sản phẩm
+                </p>
             </div>
         </div>
-    
-        <div class="row justify-content-center">
-            @foreach($products as $product)
-                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <div class="card h-100" style="
-                        border: none; 
-                        border-radius: 12px; 
-                        overflow: hidden; 
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-                        transition: all 0.3s ease;
-                        background: white;
-                    ">
-                        @if($product->image)
-                            <img src="{{ filter_var($product->image, FILTER_VALIDATE_URL) ? $product->image : asset('storage/' . $product->image) }}" 
-                                 alt="{{ $product->name }}" 
-                                 class="card-img-top"
-                                 style="height: 200px; object-fit: cover;">
-                        @else
-                            <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background: var(--puma-gradient-1); color: white;">
-                                <i class="fas fa-image fa-3x"></i>
-                            </div>
-                        @endif
-                    
-                        <!-- Product Info -->
-                        <div class="card-body" style="padding: 15px;">
-                            <h5 class="card-title" style="
-                                font-size: 16px; 
-                                font-weight: 700; 
-                                color: #2c3e50; 
-                                margin-bottom: 10px; 
-                                text-transform: uppercase;
-                                letter-spacing: 0.5px;
-                                line-height: 1.3;
-                            ">
-                                {{ $product->name }}
-                            </h5>
-                            
-                            <p class="card-text" style="
-                                font-size: 13px; 
-                                color: #7f8c8d; 
-                                margin-bottom: 15px;
-                                line-height: 1.4;
-                                height: 40px;
-                                overflow: hidden;
-                                display: -webkit-box;
-                                -webkit-line-clamp: 2;
-                                -webkit-box-orient: vertical;
-                            ">
-                                {{ $product->description }}
-                            </p>
-                            
-                            <!-- Price -->
-                            <div style="margin-bottom: 20px;">
-                                <span style="
-                                    font-size: 20px; 
-                                    font-weight: 700; 
-                                    color: #e74c3c;
-                                ">
-                                    {{ number_format($product->price) }} VNĐ
-                                </span>
-                            </div>
-                        
-                                                <!-- Quick Size Selector (Hidden by default) -->
-                        <div class="quick-size-selector mb-3" style="display: none;">
-                            <label class="form-label fw-bold text-muted" style="font-size: 12px;">CHỌN SIZE:</label>
-                            <div class="d-flex gap-1 mb-2">
-                                @if($product->sizes && $product->sizes->count() > 0)
-                                    @foreach($product->sizes->take(5) as $size)
-                                        <button type="button" 
-                                                class="quick-size-btn btn btn-outline-secondary btn-sm" 
-                                                data-size="{{ $size->size }}" 
-                                                data-size-id="{{ $size->id }}"
-                                                data-price-adjustment="{{ $size->price_adjustment }}"
-                                                style="width: 45px; height: 35px; font-size: 11px; font-weight: 600;">
-                                            {{ $size->size }}
-                                        </button>
-                                    @endforeach
-                                @else
-                                    <button type="button" 
-                                            class="quick-size-btn btn btn-outline-secondary btn-sm" 
-                                            data-size="XL" 
-                                            data-size-id="" 
-                                            data-price-adjustment="0"
-                                            style="width: 45px; height: 35px; font-size: 11px; font-weight: 600;">
-                                        XL
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-
-                                                <!-- Default Action Buttons -->
-                            <div class="default-buttons d-flex gap-2">
-                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-dark flex-fill" style="font-size: 11px; padding: 8px 12px; border: 2px solid #343a40; color: #343a40; font-weight: 600;">
-                                    <i class="fas fa-eye"></i> XEM
-                                </a>
-                                <button type="button" class="show-size-selector btn flex-fill" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border: none; color: white; font-size: 11px; padding: 8px 12px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(220,53,69,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                                    <i class="fas fa-plus"></i> THÊM
-                                </button>
-                            </div>
-                        
-                            <!-- Size Selected Buttons (Hidden by default) -->
-                            <form action="{{ route('cart.add', $product) }}" method="POST" class="size-selected-form" style="display: none;">
-                                @csrf
-                                <input type="hidden" name="size" class="selected-size" value="">
-                                <input type="hidden" name="size_id" class="selected-size-id" value="">
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn flex-fill" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border: none; color: white; font-size: 11px; padding: 8px 12px; font-weight: 600; transition: all 0.3s ease;" disabled>
-                                        <i class="fas fa-cart-plus"></i> THÊM VÀO GIỎ
-                                    </button>
-                                    <button type="button" class="cancel-size-selection btn btn-outline-secondary" style="font-size: 11px; padding: 8px 12px; font-weight: 600;">
-                                        <i class="fas fa-times"></i> HỦY
-                                    </button>
-                                </div>
-                            </form>
-
-                            @auth
-                                @if(Auth::user()->isAdmin())
-                                <!-- Admin Actions -->
-                                <div class="d-flex gap-2 mt-2">
-                                    <a href="{{ route('admin.products.edit', $product) }}" 
-                                       class="puma-btn puma-btn-gold flex-fill"
-                                       style="font-size: 10px; padding: 8px;">
-                                        <i class="fas fa-edit"></i> SỬA
-                                    </a>
-                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" style="flex: 1;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="puma-btn puma-btn-primary w-100"
-                                                style="font-size: 10px; padding: 8px; background: var(--puma-gradient-2);"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
-                                            <i class="fas fa-trash"></i> XÓA
-                                        </button>
-                                    </form>
-                                </div>
-                                @endif
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    
-        @if($products->isEmpty())
-            <div class="text-center py-5">
-                <div style="width: 100px; height: 100px; background: var(--puma-gradient-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; color: white;">
-                    <i class="fas fa-search fa-3x"></i>
-                </div>
-                <h3 class="puma-text-black">KHÔNG TÌM THẤY SẢN PHẨM NÀO</h3>
-                <p style="color: var(--puma-medium-grey); text-transform: uppercase; letter-spacing: 1px;">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
-                <a href="{{ route('products.index') }}" class="puma-btn puma-btn-primary puma-mt-20">
-                    <i class="fas fa-redo"></i> XEM TẤT CẢ SẢN PHẨM
-                </a>
-            </div>
-        @endif
-        
-        <!-- Pagination -->
-        @if($products->hasPages())
-            <div class="d-flex justify-content-center mt-4">
-                {{ $products->links() }}
-            </div>
-        @endif
     </div>
 </section>
+
+<!-- Advanced Search Container -->
+<section style="background: var(--gray-50); padding: var(--space-6) 0;">
+    <div class="container">
+        <!-- Main Search & Filter Panel -->
+        <div class="advanced-search-container">
+            <!-- Search Header with Toggle -->
+            <div class="search-header">
+                <h3 class="search-title">
+                    <i class="fas fa-filter"></i>
+                    Tìm kiếm & Lọc sản phẩm
+                </h3>
+                <button type="button" class="filter-toggle-btn" id="filterToggle">
+                    <i class="fas fa-sliders-h"></i>
+                    Bộ lọc nâng cao
+                </button>
+            </div>
+
+            <!-- Main Search Box with Autocomplete -->
+            <div style="padding: var(--space-6); background: white;">
+                <form method="GET" action="{{ route('products.index') }}" id="advancedFilterForm">
+                    <div class="search-box-advanced">
+                        <i class="fas fa-search search-icon-advanced"></i>
+                        <input type="text" 
+                               class="search-input-advanced" 
+                               name="search" 
+                               id="searchInput"
+                               placeholder="Tìm kiếm theo tên, mô tả, chất liệu, danh mục..." 
+                               value="{{ request('search') }}"
+                               autocomplete="off">
+                        <button type="button" class="search-clear-btn" id="searchClear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        
+                        <!-- Autocomplete Dropdown -->
+                        <div class="autocomplete-dropdown" id="autocompleteDropdown">
+                            <!-- Dynamic suggestions will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="quick-filters" style="margin-top: var(--space-4);">
+                        <button type="button" class="quick-filter-btn {{ !request()->hasAny(['search', 'categories', 'styles', 'materials', 'fits', 'sizes', 'price_range', 'min_price', 'max_price']) ? 'active' : '' }}" data-filter="all">
+                            <i class="fas fa-th"></i> Tất cả
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('price_range') == 'under_500k' ? 'active' : '' }}" data-filter="price_range" data-value="under_500k">
+                            <i class="fas fa-tag"></i> Dưới 500K
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('price_range') == '500k_1m' ? 'active' : '' }}" data-filter="price_range" data-value="500k_1m">
+                            <i class="fas fa-tags"></i> 500K - 1M
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('price_range') == '1m_2m' ? 'active' : '' }}" data-filter="price_range" data-value="1m_2m">
+                            <i class="fas fa-star"></i> 1M - 2M
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('price_range') == 'over_2m' ? 'active' : '' }}" data-filter="price_range" data-value="over_2m">
+                            <i class="fas fa-crown"></i> Trên 2M
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('availability') == 'in_stock' ? 'active' : '' }}" data-filter="availability" data-value="in_stock">
+                            <i class="fas fa-check-circle"></i> Còn hàng
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('sort') == 'newest' ? 'active' : '' }}" data-filter="sort" data-value="newest">
+                            <i class="fas fa-clock"></i> Mới nhất
+                        </button>
+                        <button type="button" class="quick-filter-btn {{ request('sort') == 'popularity' ? 'active' : '' }}" data-filter="sort" data-value="popularity">
+                            <i class="fas fa-fire"></i> Phổ biến
+                        </button>
+                    </div>
+
+                    <!-- Advanced Filter Panel (Hidden by Default) -->
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="filter-sections">
+                            <!-- Categories Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-list"></i>
+                                    Danh mục
+                                </h4>
+                                <div class="checkbox-filters">
+                                    @foreach($categories as $category)
+                                        <label class="checkbox-filter-item">
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" 
+                                                       name="categories[]" 
+                                                       value="{{ $category->id }}"
+                                                       {{ in_array($category->id, (array) request('categories', [])) ? 'checked' : '' }}>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                            <span class="filter-item-label">{{ $category->name }}</span>
+                                            <span class="filter-item-count">{{ $category->products_count ?? 0 }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Price Range Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Khoảng giá
+                                </h4>
+                                <div class="price-range-container">
+                                    <div class="price-range-inputs">
+                                        <input type="number" 
+                                               class="price-input" 
+                                               name="min_price" 
+                                               placeholder="Từ {{ number_format($priceStats->min_price ?? 0) }}"
+                                               value="{{ request('min_price') }}"
+                                               min="{{ $priceStats->min_price ?? 0 }}"
+                                               max="{{ $priceStats->max_price ?? 0 }}">
+                                        <input type="number" 
+                                               class="price-input" 
+                                               name="max_price" 
+                                               placeholder="Đến {{ number_format($priceStats->max_price ?? 0) }}"
+                                               value="{{ request('max_price') }}"
+                                               min="{{ $priceStats->min_price ?? 0 }}"
+                                               max="{{ $priceStats->max_price ?? 0 }}">
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500); text-align: center; margin-top: var(--space-2);">
+                                        Giá trung bình: {{ number_format($priceStats->avg_price ?? 0) }} VNĐ
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sizes Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-ruler"></i>
+                                    Kích cỡ
+                                </h4>
+                                <div class="size-filters">
+                                    @foreach($availableSizes as $size)
+                                        <button type="button" 
+                                                class="size-filter-pill {{ in_array($size->size, (array) request('sizes', [])) ? 'active' : '' }}"
+                                                data-size="{{ $size->size }}"
+                                                title="{{ $size->product_count }} sản phẩm, {{ $size->total_stock }} tồn kho">
+                                            {{ $size->size }}
+                                            <small style="display: block; font-size: 0.6rem; opacity: 0.8;">{{ $size->product_count }}</small>
+                                        </button>
+                                    @endforeach
+                                </div>
+                                <!-- Hidden input for sizes -->
+                                <div id="selectedSizes" style="display: none;">
+                                    @foreach((array) request('sizes', []) as $selectedSize)
+                                        <input type="hidden" name="sizes[]" value="{{ $selectedSize }}">
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Styles Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-palette"></i>
+                                    Phong cách
+                                </h4>
+                                <div class="checkbox-filters">
+                                    @foreach($styles as $style)
+                                        <label class="checkbox-filter-item">
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" 
+                                                       name="styles[]" 
+                                                       value="{{ $style->style }}"
+                                                       {{ in_array($style->style, (array) request('styles', [])) ? 'checked' : '' }}>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                            <span class="filter-item-label">{{ $style->style }}</span>
+                                            <span class="filter-item-count">{{ $style->count }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Materials Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-tshirt"></i>
+                                    Chất liệu
+                                </h4>
+                                <div class="checkbox-filters">
+                                    @foreach($materials as $material)
+                                        <label class="checkbox-filter-item">
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" 
+                                                       name="materials[]" 
+                                                       value="{{ $material->material }}"
+                                                       {{ in_array($material->material, (array) request('materials', [])) ? 'checked' : '' }}>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                            <span class="filter-item-label">{{ $material->material }}</span>
+                                            <span class="filter-item-count">{{ $material->count }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Fits Filter -->
+                            <div class="filter-section">
+                                <h4 class="filter-section-title">
+                                    <i class="fas fa-user"></i>
+                                    Kiểu dáng
+                                </h4>
+                                <div class="checkbox-filters">
+                                    @foreach($fits as $fit)
+                                        <label class="checkbox-filter-item">
+                                            <div class="custom-checkbox">
+                                                <input type="checkbox" 
+                                                       name="fits[]" 
+                                                       value="{{ $fit->fit }}"
+                                                       {{ in_array($fit->fit, (array) request('fits', [])) ? 'checked' : '' }}>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                            <span class="filter-item-label">{{ $fit->fit }}</span>
+                                            <span class="filter-item-count">{{ $fit->count }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Actions -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--gray-200);">
+                            <button type="button" class="clear-all-filters" id="clearAllFilters">
+                                <i class="fas fa-times"></i> Xóa tất cả bộ lọc
+                            </button>
+                            <div style="display: flex; gap: var(--space-3);">
+                                <button type="button" class="filter-toggle-btn" id="hideFilters">
+                                    <i class="fas fa-eye-slash"></i> Ẩn bộ lọc
+                                </button>
+                                <button type="submit" style="background: var(--primary); color: white; border: none; border-radius: var(--radius-lg); padding: var(--space-3) var(--space-5); font-weight: var(--font-semibold);">
+                                    <i class="fas fa-search"></i> Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        @if(request()->hasAny(['search', 'categories', 'styles', 'materials', 'fits', 'sizes', 'price_range', 'min_price', 'max_price', 'availability']))
+            <div class="active-filters">
+                @if(request('search'))
+                    <span class="active-filter-tag">
+                        <i class="fas fa-search"></i>
+                        "{{ request('search') }}"
+                        <button type="button" class="active-filter-remove" data-filter="search">×</button>
+                    </span>
+                @endif
+                
+                @if(request('price_range'))
+                    <span class="active-filter-tag">
+                        <i class="fas fa-dollar-sign"></i>
+                        @switch(request('price_range'))
+                            @case('under_500k') Dưới 500K @break
+                            @case('500k_1m') 500K - 1M @break
+                            @case('1m_2m') 1M - 2M @break
+                            @case('over_2m') Trên 2M @break
+                        @endswitch
+                        <button type="button" class="active-filter-remove" data-filter="price_range">×</button>
+                    </span>
+                @endif
+
+                @foreach((array) request('categories', []) as $categoryId)
+                    @php $category = $categories->find($categoryId); @endphp
+                    @if($category)
+                        <span class="active-filter-tag">
+                            <i class="fas fa-list"></i>
+                            {{ $category->name }}
+                            <button type="button" class="active-filter-remove" data-filter="categories" data-value="{{ $categoryId }}">×</button>
+                        </span>
+                    @endif
+                @endforeach
+
+                @foreach((array) request('sizes', []) as $size)
+                    <span class="active-filter-tag">
+                        <i class="fas fa-ruler"></i>
+                        Size {{ $size }}
+                        <button type="button" class="active-filter-remove" data-filter="sizes" data-value="{{ $size }}">×</button>
+                    </span>
+                @endforeach
+
+                <button type="button" class="clear-all-filters" onclick="window.location.href='{{ route('products.index') }}'">
+                    <i class="fas fa-times"></i> Xóa tất cả
+                </button>
+            </div>
+        @endif
+
+        <!-- Sort and View Options -->
+        <div class="sort-view-container">
+            <div class="results-info">
+                Hiển thị <span class="results-count">{{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}</span> 
+                trong tổng số <span class="results-count">{{ $products->total() }}</span> sản phẩm
+            </div>
+            
+            <div class="sort-controls">
+                <select name="sort" class="sort-select" onchange="submitSort(this.value)">
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
+                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Phổ biến nhất</option>
+                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Giá thấp → cao</option>
+                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Giá cao → thấp</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Tên A → Z</option>
+                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Tên Z → A</option>
+                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Đánh giá cao</option>
+                </select>
+                
+                <div class="view-toggle">
+                    <button type="button" class="view-btn active" data-view="grid" title="Lưới">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button type="button" class="view-btn" data-view="list" title="Danh sách">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+                
+                <select name="per_page" class="per-page-select" onchange="submitPerPage(this.value)">
+                    <option value="12" {{ request('per_page', 12) == 12 ? 'selected' : '' }}>12 / trang</option>
+                    <option value="24" {{ request('per_page') == 24 ? 'selected' : '' }}>24 / trang</option>
+                    <option value="48" {{ request('per_page') == 48 ? 'selected' : '' }}>48 / trang</option>
+                    <option value="96" {{ request('per_page') == 96 ? 'selected' : '' }}>96 / trang</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="search-loading" id="searchLoading">
+            <div class="loading-spinner"></div>
+            <span>Đang tìm kiếm...</span>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsContainer">
+            @include('products.partials.product-grid')
+        </div>
+
+        <!-- Pagination -->
+        <div id="paginationContainer">
+            @include('products.partials.pagination')
+        </div>
+    </div>
+</section>
+
 <script>
-// Submit filter form automatically
-function submitFilter() {
-    document.getElementById('filterForm').submit();
+document.addEventListener('DOMContentLoaded', function() {
+    initAdvancedSearch();
+});
+
+function initAdvancedSearch() {
+    // Filter toggle
+    const filterToggle = document.getElementById('filterToggle');
+    const filterPanel = document.getElementById('filterPanel');
+    const hideFilters = document.getElementById('hideFilters');
+    
+    filterToggle?.addEventListener('click', function() {
+        filterPanel.classList.toggle('show');
+        this.classList.toggle('active');
+    });
+    
+    hideFilters?.addEventListener('click', function() {
+        filterPanel.classList.remove('show');
+        filterToggle.classList.remove('active');
+    });
+
+    // Search input with autocomplete
+    const searchInput = document.getElementById('searchInput');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const searchClear = document.getElementById('searchClear');
+    
+    let searchTimeout;
+    
+    searchInput?.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length >= 2) {
+            searchTimeout = setTimeout(() => {
+                fetchSuggestions(query);
+            }, 300);
+        } else {
+            autocompleteDropdown.classList.remove('show');
+        }
+    });
+
+    searchClear?.addEventListener('click', function() {
+        searchInput.value = '';
+        autocompleteDropdown.classList.remove('show');
+        submitFilters();
+    });
+
+    // Quick filters
+    document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            const value = this.dataset.value;
+            
+            if (filter === 'all') {
+                window.location.href = '{{ route("products.index") }}';
+                return;
+            }
+            
+            // Remove active from siblings
+            this.parentElement.querySelectorAll('.quick-filter-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active to clicked
+            this.classList.add('active');
+            
+            // Submit with filter
+            const form = document.getElementById('advancedFilterForm');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = filter;
+            input.value = value;
+            form.appendChild(input);
+            form.submit();
+        });
+    });
+
+    // Size filter pills
+    document.querySelectorAll('.size-filter-pill').forEach(pill => {
+        pill.addEventListener('click', function() {
+            const size = this.dataset.size;
+            this.classList.toggle('active');
+            
+            updateSizeInputs();
+        });
+    });
+
+    // Active filter removal
+    document.querySelectorAll('.active-filter-remove').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            const value = this.dataset.value;
+            
+            removeFilter(filter, value);
+        });
+    });
+
+    // Clear all filters
+    document.getElementById('clearAllFilters')?.addEventListener('click', function() {
+        window.location.href = '{{ route("products.index") }}';
+    });
+
+    // Form submission with AJAX
+    const form = document.getElementById('advancedFilterForm');
+    form?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitFilters();
+    });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Product cards hover effects
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+function fetchSuggestions(query) {
+    fetch(`{{ route('products.search.suggestions') }}?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(suggestions => {
+            displaySuggestions(suggestions);
+        })
+        .catch(error => {
+            console.error('Error fetching suggestions:', error);
         });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-            this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
-        });
-    });
+}
+
+function displaySuggestions(suggestions) {
+    const dropdown = document.getElementById('autocompleteDropdown');
     
-    // Show size selector when clicking THÊM
-    document.querySelectorAll('.show-size-selector').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.card');
-            const sizeSelector = card.querySelector('.quick-size-selector');
-            const defaultButtons = card.querySelector('.default-buttons');
-            const sizeForm = card.querySelector('.size-selected-form');
-            
-            // Show size selector and hide default buttons
-            sizeSelector.style.display = 'block';
-            defaultButtons.style.display = 'none';
-            sizeForm.style.display = 'block';
-        });
-    });
-    
-    // Handle size selection
-    document.querySelectorAll('.quick-size-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const card = this.closest('.card');
-            const sizeForm = card.querySelector('.size-selected-form');
-            const addToCartBtn = sizeForm.querySelector('button[type="submit"]');
-            const sizeInput = sizeForm.querySelector('.selected-size');
-            const sizeIdInput = sizeForm.querySelector('.selected-size-id');
-            
-            // Reset all size buttons in this card
-            card.querySelectorAll('.quick-size-btn').forEach(sizeBtn => {
-                sizeBtn.classList.remove('btn-primary');
-                sizeBtn.classList.add('btn-outline-secondary');
-            });
-            
-            // Highlight selected size
-            this.classList.remove('btn-outline-secondary');
-            this.classList.add('btn-primary');
-            
-            // Enable add to cart button and set values
-            addToCartBtn.disabled = false;
-            sizeInput.value = this.dataset.size;
-            sizeIdInput.value = this.dataset.sizeId;
-        });
-    });
-    
-    // Cancel size selection
-    document.querySelectorAll('.cancel-size-selection').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const card = this.closest('.card');
-            const sizeSelector = card.querySelector('.quick-size-selector');
-            const defaultButtons = card.querySelector('.default-buttons');
-            const sizeForm = card.querySelector('.size-selected-form');
-            
-            // Hide size selector and show default buttons
-            if (sizeSelector) sizeSelector.style.display = 'none';
-            if (defaultButtons) defaultButtons.style.display = 'flex';
-            if (sizeForm) sizeForm.style.display = 'none';
-            
-            const addToCartBtn = sizeForm ? sizeForm.querySelector('button[type="submit"]') : null;
-            
-            // Reset size selection
-            card.querySelectorAll('.quick-size-btn').forEach(sizeBtn => {
-                sizeBtn.classList.remove('btn-primary');
-                sizeBtn.classList.add('btn-outline-secondary');
-            });
-            
-            // Disable add to cart button
-            if (addToCartBtn) addToCartBtn.disabled = true;
-        });
-    });
-    
-    // AJAX Add to Cart
-    document.querySelectorAll('.size-selected-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG THÊM...';
-            
-            // Get CSRF token
-            const token = document.querySelector('meta[name="csrf-token"]');
-            if (token) {
-                formData.append('_token', token.getAttribute('content'));
-            }
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification('success', data.message);
-                    
-                    // Reset form and hide size selector
-                    const card = this.closest('.card');
-                    const sizeSelector = card.querySelector('.quick-size-selector');
-                    const defaultButtons = card.querySelector('.default-buttons');
-                    
-                    if (sizeSelector) sizeSelector.style.display = 'none';
-                    if (defaultButtons) defaultButtons.style.display = 'flex';
-                    this.style.display = 'none';
-                    
-                    // Reset size selection
-                    card.querySelectorAll('.quick-size-btn').forEach(sizeBtn => {
-                        sizeBtn.classList.remove('btn-primary');
-                        sizeBtn.classList.add('btn-outline-secondary');
-                    });
-                    
-                    // Update cart count if exists
-                    const cartCount = document.querySelector('.cart-count');
-                    if (cartCount && data.cartCount) {
-                        cartCount.textContent = data.cartCount;
-                    }
-                } else {
-                    showNotification('error', data.message || 'Có lỗi xảy ra');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('error', 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng');
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            });
-        });
-    });
-    
-    // Notification function
-    function showNotification(type, message) {
-        const existingNotifications = document.querySelectorAll('.custom-notification');
-        existingNotifications.forEach(n => n.remove());
-        
-        const notification = document.createElement('div');
-        notification.className = `custom-notification alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            min-width: 300px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        `;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 5000);
+    if (suggestions.length === 0) {
+        dropdown.classList.remove('show');
+        return;
     }
-});
+    
+    dropdown.innerHTML = suggestions.map(suggestion => `
+        <div class="autocomplete-item" data-value="${suggestion.value}">
+            <div class="autocomplete-icon ${suggestion.type}">
+                <i class="fas fa-${getIconForType(suggestion.type)}"></i>
+            </div>
+            <span>${suggestion.value}</span>
+        </div>
+    `).join('');
+    
+    dropdown.classList.add('show');
+    
+    // Add click handlers
+    dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.getElementById('searchInput').value = this.dataset.value;
+            dropdown.classList.remove('show');
+            submitFilters();
+        });
+    });
+}
+
+function getIconForType(type) {
+    const icons = {
+        product: 'box',
+        category: 'list',
+        style: 'palette',
+        material: 'tshirt'
+    };
+    return icons[type] || 'search';
+}
+
+function updateSizeInputs() {
+    const selectedSizes = Array.from(document.querySelectorAll('.size-filter-pill.active'))
+        .map(pill => pill.dataset.size);
+    
+    const container = document.getElementById('selectedSizes');
+    container.innerHTML = selectedSizes.map(size => 
+        `<input type="hidden" name="sizes[]" value="${size}">`
+    ).join('');
+}
+
+function removeFilter(filter, value = null) {
+    const url = new URL(window.location);
+    
+    if (value) {
+        const values = url.searchParams.getAll(filter + '[]');
+        url.searchParams.delete(filter + '[]');
+        values.filter(v => v !== value).forEach(v => {
+            url.searchParams.append(filter + '[]', v);
+        });
+    } else {
+        url.searchParams.delete(filter);
+        url.searchParams.delete(filter + '[]');
+    }
+    
+    window.location.href = url.toString();
+}
+
+function submitFilters() {
+    showLoading();
+    
+    const form = document.getElementById('advancedFilterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    fetch(`{{ route('products.filter.ajax') }}?${params.toString()}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('productsContainer').innerHTML = data.html;
+            document.getElementById('paginationContainer').innerHTML = data.pagination;
+            
+            // Update URL without reload
+            const url = new URL(window.location);
+            url.search = params.toString();
+            window.history.pushState({}, '', url);
+            
+            // Update results count
+            updateResultsInfo(data.showing);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        hideLoading();
+    });
+}
+
+function submitSort(sortValue) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortValue);
+    window.location.href = url.toString();
+}
+
+function submitPerPage(perPage) {
+    const url = new URL(window.location);
+    url.searchParams.set('per_page', perPage);
+    url.searchParams.delete('page'); // Reset to first page
+    window.location.href = url.toString();
+}
+
+function showLoading() {
+    document.getElementById('searchLoading')?.classList.add('show');
+    document.getElementById('productsContainer')?.style.setProperty('opacity', '0.5');
+}
+
+function hideLoading() {
+    document.getElementById('searchLoading')?.classList.remove('show');
+    document.getElementById('productsContainer')?.style.setProperty('opacity', '1');
+}
+
+function updateResultsInfo(showing) {
+    const info = document.querySelector('.results-info');
+    if (info && showing) {
+        info.innerHTML = `Hiển thị <span class="results-count">${showing.from}-${showing.to}</span> trong tổng số <span class="results-count">${showing.total}</span> sản phẩm`;
+    }
+}
 </script>
 @endsection

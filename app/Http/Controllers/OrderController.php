@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductSize;
 use App\Services\MoMoService;
+use App\Services\LoyaltyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -13,9 +14,12 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function __construct()
+    protected $loyaltyService;
+
+    public function __construct(LoyaltyService $loyaltyService)
     {
         $this->middleware('auth');
+        $this->loyaltyService = $loyaltyService;
     }
 
     public function checkout()
@@ -138,6 +142,16 @@ class OrderController extends Controller
                                 return $query->where('session_id', Session::getId())
                                             ->whereNull('user_id');
                             })->delete();
+
+            // Award loyalty points for COD orders (since they're paid on delivery)
+            if (Auth::check()) {
+                try {
+                    $this->loyaltyService->awardPointsForOrder($order->id);
+                } catch (\Exception $e) {
+                    // Log error but don't fail the order
+                    \Log::error('Failed to award loyalty points for order ' . $order->id . ': ' . $e->getMessage());
+                }
+            }
         });
 
         return redirect()->route('orders.index')->with('success', 'Đơn hàng đã được đặt thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất để xác nhận và giao hàng.');

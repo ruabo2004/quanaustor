@@ -523,36 +523,36 @@
     }
 </style>
 
-<div class="checkout-container">
+<div class="checkout-container-modern">
 <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-11">
-                <div class="checkout-card">
-                    <div class="checkout-header">
-                        <h1 class="checkout-title">
-                            <i class="fas fa-credit-card"></i> Thanh toán đơn hàng
+                <div class="checkout-card-modern">
+                    <div class="checkout-header-modern">
+                        <h1 class="checkout-title-modern">
+                            <i class="fas fa-credit-card me-3"></i>Thanh toán đơn hàng
                         </h1>
-                        <p class="checkout-subtitle">Vui lòng điền thông tin giao hàng để hoàn tất đơn hàng</p>
+                        <p class="checkout-subtitle-modern">Hoàn tất đơn hàng của bạn một cách nhanh chóng và an toàn</p>
                     </div>
                     
-                    <!-- Progress Steps -->
-                    <div class="progress-steps">
-                        <div class="step">
-                            <div class="step-icon">
+                    <!-- Modern Progress Steps -->
+                    <div class="progress-steps-modern">
+                        <div class="step-modern">
+                            <div class="step-icon-modern">
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
                             <span>Giỏ hàng</span>
                         </div>
-                        <div class="step-divider"></div>
-                        <div class="step active">
-                            <div class="step-icon">
+                        <div class="step-divider-modern"></div>
+                        <div class="step-modern active">
+                            <div class="step-icon-modern">
                                 <i class="fas fa-credit-card"></i>
                             </div>
                             <span>Thanh toán</span>
                         </div>
-                        <div class="step-divider"></div>
-                        <div class="step">
-                            <div class="step-icon">
+                        <div class="step-divider-modern"></div>
+                        <div class="step-modern">
+                            <div class="step-icon-modern">
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <span>Hoàn tất</span>
@@ -561,9 +561,9 @@
     <div class="row">
                         <!-- Customer Information Form -->
                         <div class="col-lg-7">
-                            <div class="section-card">
-                                <h2 class="section-title">
-                                    <div class="section-icon">
+                            <div class="form-section-modern">
+                                <h2 class="section-title-modern">
+                                    <div class="section-icon-modern">
                                         <i class="fas fa-user"></i>
                                     </div>
                                     Thông tin giao hàng

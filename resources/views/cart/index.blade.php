@@ -1,17 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Cart Hero Section -->
-<section class="puma-hero">
-    <div class="puma-hero-overlay"></div>
+<!-- Modern Cart Hero Section -->
+<section class="modern-hero" style="padding: var(--space-12) 0; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
     <div class="container">
         <div class="text-center">
-            <h1 class="puma-hero-title">
-                <i class="fas fa-shopping-cart"></i> GIỎ HÀNG CỦA BẠN
-            </h1>
-            <p class="puma-hero-subtitle">
-                Kiểm tra và hoàn tất đơn hàng của bạn
-            </p>
+            <div class="animate-fadeInUp">
+                <h1 style="color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: var(--font-black); margin-bottom: var(--space-4);">
+                    <i class="fas fa-shopping-cart me-3"></i>Giỏ hàng của bạn
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); font-size: 1.125rem; margin-bottom: 0;">
+                    Kiểm tra và hoàn tất đơn hàng một cách nhanh chóng
+                </p>
+            </div>
         </div>
     </div>
 </section>
